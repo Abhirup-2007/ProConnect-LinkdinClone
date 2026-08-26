@@ -1,0 +1,30 @@
+.container{
+    padding: 1.2rem;
+}
+.navbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.navBarOptionContainer{
+    display: flex;
+}
+.buttonJoin{
+    width: fit-content;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ;
+    margin-top: 0.8rem;
+    font-size: 0.8rem;
+    background-color: #CD8987;
+    color: white;
+    padding-inline: 1.7rem;
+    padding-block: 0.6rem;
+    border-radius: 20px;
+}
+
+@media only screen and (max-width:600px) {
+    .navbar h1{
+        display: none;
+    }
+}

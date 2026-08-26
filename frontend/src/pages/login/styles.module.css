@@ -1,0 +1,98 @@
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: snow;
+}
+.cardContainer{
+     height: 80vh;
+     display: flex;
+     border-radius: 10px;
+     overflow: hidden;
+     width:80vw;
+     background-color: #fff;
+     box-shadow: 10px 10px 10px rgba(173, 173, 173);
+}
+.cardContainer__left{
+    flex:0.6;
+    padding: 2rem;
+    text-align: center;
+}
+.cardleft__heading{
+    font-weight: bold;
+    font-size: 1.8rem;   
+}
+
+.inputContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1.3rem;
+    max-width: 400px;
+    margin: 0 auto;
+    gap: 1.4rem;
+}
+.inputField{
+    padding-inline: 1.3rem;
+    padding-block: 0.8rem;
+    outline: none;
+    border-radius: 10px;
+    border: 1px solid silver;
+    width: 100%;
+}
+.inputRow{
+    display:flex;
+    gap: 1rem;
+}
+.buttonWithOutline{
+    padding: 0.8rem 1.3rem;
+    background-color: rgba(236 , 236, 236);
+    max-width: 400px;
+    border-radius: 10px;
+    cursor:pointer;
+    margin: 0 auto;
+}
+.cardContainer__right{
+    flex:0.4;
+    background-color: #00488b;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+}
+.cardContainer__col{
+  margin-top: 9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.cardContainer__col > p:nth-child(1){
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+.cardContainer__col > p:nth-child(2){
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+.authMessage{
+    font-size: 1rem;
+    text-align: center;
+}
+
+
+
+
+@media only screen and (max-width:600px) {
+    .cardContainer{
+        flex-direction: column;
+    }
+
+}

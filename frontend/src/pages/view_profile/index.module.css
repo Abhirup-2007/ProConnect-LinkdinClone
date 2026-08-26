@@ -1,0 +1,115 @@
+.container {
+  padding: 1.3rem;
+  background-color: rgb(255, 255, 255);
+}
+.backDropContainer {
+  width: 100%;
+  height: 30vh;
+  background: url("https://images.pexels.com/photos/11203862/pexels-photo-11203862.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  border-radius: 20px;
+}
+.backDropContainer > img {
+  width: 10rem;
+  height: 10rem;
+  position: absolute;
+  object-fit: cover;
+  bottom: -30%;
+  left: 8%;
+  align-items: center;
+  border-radius: 50%;
+}
+.profileContainer_details {
+  padding-top: 3.6rem;
+  padding-left: 2.2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profileContainer_left {
+  padding-top: 2.3rem;
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.profileContainer_name_and_button_set {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+.card_profileContainer {
+  display: flex;
+}
+.card_profileContainer > img {
+  width: 3.4rem;
+  height: 3.4rem;
+  object-fit: cover;
+}
+.postCard {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+.mediaCard {
+  width: 3.4rem;
+  height: 3.4rem;
+}
+.connectBtn {
+  padding-inline: 0.8rem;
+  padding-block: 0.3rem;
+  background-color: rgba(3, 93, 193, 0.905);
+  outline: none;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.connectedButon {
+  padding-inline: 0.8rem;
+  padding-block: 0.3rem;
+  border: 1px solid rgba(3, 93, 193, 0.905);
+  outline: none;
+  color: rgba(3, 93, 193, 0.905);
+  cursor: pointer;
+}
+.workHistory {
+  padding-left: 3.2rem;
+  padding-top: 1.5rem;
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+}
+.workHistory_container {
+  display: flex;
+  gap: 1.4rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.workHistoryCard {
+  min-width: fit-content;
+  height: auto;
+  padding-block: 1rem;
+  padding-inline: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgb(133 132 132 / 30%);
+}
+
+.recentActivity {
+  padding-top: 6vh;
+}
+
+@media only screen and (max-width: 600px) {
+  .profileContainer_details {
+    flex-direction: column;
+  }
+}

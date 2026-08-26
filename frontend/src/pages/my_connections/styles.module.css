@@ -1,0 +1,65 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    gap: 1.7rem;
+}
+.userCard{
+    display: flex;
+    width: 100%;
+    gap: 1.2rem;
+    padding: 1.3rem;
+    align-items: center;
+    box-shadow: 10px 10px 10px 0px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+.profilePicture > img{
+    width: 6.5rem;
+    border-radius: 50%;
+}
+.connectedButon{
+    padding-inline: 0.8rem;
+    padding-block: 0.3rem;
+    border: 1px solid rgba(3, 93, 193, 0.905);
+    outline: none;
+    color: rgba(3, 93, 193, 0.905);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .container {
+        gap: 1rem;
+        padding: 0.7rem;
+        padding-bottom: 80px;
+        box-sizing: border-box;
+    }
+
+    .container h1 {
+        font-size: 1.5rem;
+    }
+
+    .userCard {
+        padding: 0.8rem;
+        gap: 0.7rem;
+    }
+
+    .profilePicture > img {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .userInfo h3 {
+        font-size: 1rem;
+    }
+
+    .userInfo p {
+        font-size: 0.85rem;
+    }
+
+    .connectedButon {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.85rem;
+    }
+}
+

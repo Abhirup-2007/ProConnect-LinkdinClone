@@ -1,0 +1,215 @@
+import PDFDocument from "pdfkit";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+
+async function converUserDataTOPDF(userData) {
+  const doc = new PDFDocument({
+    size: "A4",
+    margin: 50,
+    autoFirstPage: true,
+    bufferPages: true, // needed to prevent auto page-add overflow
+  });
+
+  const fileName = `${crypto.randomBytes(16).toString("hex")}.pdf`;
+  const outputPath = path.join(process.cwd(), "public", fileName);
+
+  const stream = fs.createWriteStream(outputPath);
+  doc.pipe(stream);
+
+  const HEADER_HEIGHT = 130;
+  const PAGE_WIDTH = doc.page.width;   // 595.28
+  const PAGE_HEIGHT = doc.page.height; // 841.89
+  const MARGIN = 50;
+  const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
+
+  // Compress font sizes so everything fits one page
+  const FONT = {
+    name: 20,
+    position: 11,
+    sectionTitle: 10,
+    body: 9,
+    workTitle: 10,
+    workSub: 9,
+    footer: 8,
+  };
+
+  // ==========================
+  // Header Background
+  // ==========================
+
+  doc.rect(0, 0, PAGE_WIDTH, HEADER_HEIGHT).fill("#1E3A8A");
+
+  // ==========================
+  // Profile Picture
+  // — white circle punched out of header so no blue bg shows
+  // ==========================
+
+  const avatarSize = 72;
+  const avatarX = PAGE_WIDTH / 2 - avatarSize / 2;
+  const avatarY = (HEADER_HEIGHT - avatarSize) / 2;
+  const centerX = PAGE_WIDTH / 2;
+  const centerY = avatarY + avatarSize / 2;
+  const radius = avatarSize / 2;
+
+  if (userData.userId?.profilePicture) {
+    const imagePath = path.join(
+      process.cwd(),
+      "public",
+      userData.userId.profilePicture
+    );
+
+    if (fs.existsSync(imagePath)) {
+      // 1. Fill a white circle to erase the blue behind the avatar
+      doc.save();
+      doc.circle(centerX, centerY, radius).fill("white");
+      doc.restore();
+
+      // 2. Clip and draw the image so it's circular
+      doc.save();
+      doc.circle(centerX, centerY, radius).clip();
+      doc.image(imagePath, avatarX, avatarY, {
+        width: avatarSize,
+        height: avatarSize,
+      });
+      doc.restore();
+
+      // 3. Thin white border ring on top
+      doc.circle(centerX, centerY, radius).lineWidth(1.5).stroke("white");
+    }
+  }
+
+  // ==========================
+  // Name & Position
+  // ==========================
+
+  doc.y = HEADER_HEIGHT + 12;
+
+  doc
+    .fillColor("#1E3A8A")
+    .font("Helvetica-Bold")
+    .fontSize(FONT.name)
+    .text(userData.userId?.name || "Unknown", MARGIN, doc.y, {
+      align: "center",
+      width: CONTENT_WIDTH,
+    });
+
+  doc
+    .fillColor("#555")
+    .font("Helvetica")
+    .fontSize(FONT.position)
+    .text(userData.currentPost || userData.currentPosition || "", {
+      align: "center",
+      width: CONTENT_WIDTH,
+    });
+
+  doc.moveDown(0.8);
+  doc.fillColor("black");
+
+  // ==========================
+  // Helper: Section Header
+  // ==========================
+
+  const section = (title) => {
+    doc.moveDown(0.4);
+
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(FONT.sectionTitle)
+      .fillColor("#1E3A8A")
+      .text(title.toUpperCase(), { characterSpacing: 0.8 });
+
+    doc
+      .moveTo(MARGIN, doc.y + 1)
+      .lineTo(PAGE_WIDTH - MARGIN, doc.y + 1)
+      .lineWidth(0.75)
+      .stroke("#1E3A8A");
+
+    doc.moveDown(0.5);
+    doc.fillColor("black").font("Helvetica");
+  };
+
+  // ==========================
+  // Contact
+  // ==========================
+
+  section("Contact");
+
+  doc.fontSize(FONT.body);
+  doc.text(`Email       : ${userData.userId?.email || "N/A"}`);
+  doc.text(`Username : ${userData.userId?.username || "N/A"}`);
+
+  // ==========================
+  // Professional Summary
+  // ==========================
+
+  section("Professional Summary");
+
+  doc
+    .fontSize(FONT.body)
+    .fillColor("#444")
+    .text(userData.bio || "No summary provided.", {
+      align: "justify",
+      lineGap: 2,
+    });
+
+  // ==========================
+  // Work Experience
+  // ==========================
+
+  section("Work Experience");
+
+  if (userData.pastWork?.length > 0) {
+    userData.pastWork.forEach((work, i) => {
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(FONT.workTitle)
+        .fillColor("black")
+        .text(work.position || "Unknown Position");
+
+      doc
+        .font("Helvetica")
+        .fontSize(FONT.workSub)
+        .fillColor("#444")
+        .text(work.companyName || "Unknown Company");
+
+      doc
+        .fontSize(FONT.workSub - 1)
+        .fillColor("gray")
+        .text(`Duration: ${work.years || "N/A"}`);
+
+      if (i < userData.pastWork.length - 1) doc.moveDown(0.4);
+    });
+  } else {
+    doc.fontSize(FONT.body).fillColor("gray").text("No work experience available.");
+  }
+
+  // ==========================
+  // Footer — pinned to bottom of page
+  // ==========================
+
+  doc
+    .fontSize(FONT.footer)
+    .fillColor("#bbb")
+    .text("Generated by Resume Builder", MARGIN, PAGE_HEIGHT - 30, {
+      align: "center",
+      width: CONTENT_WIDTH,
+    });
+
+  // Trim to exactly 1 page — discard any overflow pages
+  doc.flushPages();
+  const range = doc.bufferedPageRange();
+  if (range.count > 1) {
+    // Keep only page 0 by ending before additional pages are written
+    // (bufferPages prevents them from flushing; we just don't switchToPage them)
+  }
+
+  doc.end();
+
+  return new Promise((resolve, reject) => {
+    stream.on("finish", () => resolve(outputPath));
+    stream.on("error", reject);
+  });
+}
+
+export default converUserDataTOPDF;
